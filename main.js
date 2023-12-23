@@ -32,6 +32,21 @@ class BlockChain {
     newBlock.hash = newBlock.calculateHash()
     this.chain.push(newBlock)
   }
+  isChainValid(){
+    for(let i=1;i<this.chain.length;i++){
+        const currentBlock = this.chain[i];
+
+        const previousBlock = this.chain[i-1];
+
+        if(currentBlock.hash!==currentBlock.calculateHash()){
+            return false
+        }
+        if(currentBlock.previousHash !== previousBlock.hash){
+            return false;
+        }
+    }
+    return true;
+  }
 }
 
 
@@ -39,3 +54,10 @@ let sataCoin = new BlockChain()
 sataCoin.addBlock( new Block(1, "10-01-2024", {amount:4}))
 sataCoin.addBlock( new Block(2, "11-01-2024", {amount:10}))
 console.log(JSON.stringify(sataCoin, null, 4))
+
+console.log('Is blockchain valid?', sataCoin.isChainValid())
+
+sataCoin.chain[1].data={amount:100}
+sataCoin.chain[1].hash = sataCoin.chain[1].calculateHash()
+
+console.log('Is blockchain valid now?', sataCoin.isChainValid())
